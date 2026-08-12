@@ -1,0 +1,496 @@
+---
+title: "Math 189 Homework 1"
+author: "Daniel Kurland"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document:
+    toc: false
+  github_document: default
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{geometry}
+---
+
+# Problem 1 
+
+## Part a:
+```{r problem 1_a, message=FALSE, warning=FALSE}
+library(tidyverse)
+load("ames.rda")
+
+#Nominal: MS.Zoning
+
+table(ames$MS.Zoning)
+prop.table(table(ames$MS.Zoning))
+
+barplot(sort(table(ames$MS.Zoning), decreasing = TRUE),
+        main = "Zoning Classification (Nominal)",
+        ylab = "Count", col = "steelblue")
+
+#Ordinal.Exterior.Quality
+
+table(ames$Exter.Qual)
+
+ames$Exter.Qual <- factor(ames$Exter.Qual,
+                           levels = c("Po","Fa","TA","Gd","Ex"),
+                           ordered = TRUE)
+table(ames$Exter.Qual)
+summary(ames$Exter.Qual)
+
+barplot(table(ames$Exter.Qual),
+        main = "Exterior Quality (Ordinal)",
+        ylab = "Count", col = "darkorange")
+  
+#Discrete numerical: Bedroom.AbvGr
+
+summary(ames$Bedroom.AbvGr)
+sd(ames$Bedroom.AbvGr)
+table(ames$Bedroom.AbvGr)
+
+barplot(table(ames$Bedroom.AbvGr),
+        main = "Bedrooms Above Grade (Discrete Count)",
+        xlab = "Number of bedrooms", ylab = "Count", col = "forestgreen")
+
+
+#Continous numerical: area in square feet 
+
+summary(ames$area)
+sd(ames$area)
+
+hist(ames$area, breaks = 40,
+     main = "Living Area (Continuous, sq ft)",
+     xlab = "Above-ground living area (sq ft)", col = "skyblue")
+
+boxplot(ames$area,
+        main = "Living Area (Continuous, sq ft)",
+        ylab = "Square feet", col = "skyblue")
+
+
+```
+## Observations:
+* S.Zoning (nominal variable) — Dominated by "RL" (residential low density): 2273/2930 $\approx$ 78%, 
+followed by "RM" (residential medium density, ~16%). Other categories (agricultural, commercial, 
+industrial, floating village, high density) are rare, some with only 1–2 homes in the sample. 
+Bar chart shows distribution clearly, and makes clear in some later graphs that A (agr) and I (industrial) 
+are excluded from analysis due to small n.
+
+* Exter.Qual (ordinal variable) — Most homes fall in "TA" (typical/average, n=1799) or "Gd" (good, n=989); 
+very few are "Fa" and none are "Po" in this sample. The ordered bar chart preserves the Po→Ex ordinality sequence,
+makes chart easy to read, and shows the distribution of quality across the sample.
+
+* Bedroom.AbvGr (discrete count variable) — Mean $\approx$ 2.85 bedrooms, median = 3, SD $\approx$ 0.83. 
+Almost symmetric and unimodal, most datapoints at 2–4 bedrooms, with a long thin right tail.
+
+* area (continuous variable) — Mean $\approx$ 1500 sq ft, median = 1442, SD $\approx$ 506, right-skewed (mean > median) 
+with some large outlier homes. Histogram shows skew clearly, and boxplot flag several high-end outliers beyond the whiskers.
+
+## Part b:
+```{r}
+table(ames$MS.Zoning, ames$Exter.Qual)
+
+# proportions within each zoning class
+prop.table(table(ames$MS.Zoning, ames$Exter.Qual), margin = 1)
+
+# grouped barplot
+zoning_qual_tab <- table(ames$Exter.Qual, ames$MS.Zoning)
+barplot(zoning_qual_tab,
+        beside = TRUE,
+        legend = rownames(zoning_qual_tab),
+        col = c("#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff"),
+        main = "Exterior Quality by Zoning Classification",
+        xlab = "Zoning", ylab = "Count",
+        args.legend = list(x = "topright", cex = 0.7, title = "Exter Qual"))
+
+library(dplyr)
+library(ggplot2)
+library(forcats)
+
+ames %>%
+  filter(!MS.Zoning %in% c("A (agr)", "I (all)")) %>%  
+  mutate(
+    MS.Zoning = fct_infreq(MS.Zoning),                
+    Exter.Qual = factor(Exter.Qual, levels = c("Fa", "TA", "Gd", "Ex"))  
+  ) %>%
+  ggplot(aes(x = MS.Zoning, fill = Exter.Qual)) +
+  geom_bar(position = "fill", width = 0.7) +
+  scale_y_continuous(labels = scales::percent, expand = c(0, 0)) +
+  scale_fill_brewer(palette = "Set2", name = "Exterior Quality") +
+  coord_flip() +
+  labs(
+    title = "Exterior Quality Distribution Across Zoning Types",
+    x = NULL,
+    y = "Proportion of Homes",
+    caption = "RH and C (all) have small n; A (agr) and I (all) excluded, n<=2"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0),
+    plot.subtitle = element_text(color = "grey40", size = 11, margin = margin(b = 12)),
+    plot.caption = element_text(color = "grey60", size = 9, hjust = 1),
+    legend.position = "top",
+    legend.title = element_text(face = "bold"),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.y = element_blank(),
+    axis.text.y = element_text(face = "bold")
+  )
+```
+## Observations:
+*Most homes are in residential low-density zoning, with second-most in residential medium. 
+Typical/average exterior quality dominates across all zoning types except for floating villages 
+where good dominates. Very few homes in agricultural or industrial zoning (<=2 for both so excluded 
+from plot). 
+## c:
+```{r}
+load("ames.rda")
+
+summary(ames$area)
+summary(ames$price)
+
+
+cor_val <- cor(ames[["area"]], ames[["price"]], use = "complete.obs")
+print(cor_val)
+
+plot(ames$area, ames$price,
+     pch = 19, col = adjustcolor("steelblue", alpha.f = 0.4),
+     main = "Price vs Living Area",
+     xlab = "Above-ground living area (sq ft)",
+     ylab = "Price ($)")
+abline(lm(price ~ area, data = ames), col = "red", lwd = 2)
+```
+## Observations:
+* Positive, roughly linear, relationship between living area and price,
+with some outliers. Some high outliers on right, and also low outliers
+on far right, much of data clustered in lower left. More variability in pri
+ce for larger homes, consistent with heteroskedasticity.
+
+## part d:
+```{r}
+library(dplyr)
+
+ames <- ames %>%
+  mutate(Exter.Qual = factor(Exter.Qual, levels = c("Fa", "TA", "Gd", "Ex")))
+
+ames %>%
+  group_by(Exter.Qual) %>%
+  summarise(
+    Min    = min(price, na.rm = TRUE),
+    Q1     = quantile(price, 0.25, na.rm = TRUE),
+    Median = median(price, na.rm = TRUE),
+    Mean   = mean(price, na.rm = TRUE),
+    Q3     = quantile(price, 0.75, na.rm = TRUE),
+    Max    = max(price, na.rm = TRUE),
+    SD     = sd(price, na.rm = TRUE)
+  )
+
+boxplot(price ~ Exter.Qual, data = ames,
+        col = "darkorange",
+        main = "Sale Price by Exterior Quality",
+        xlab = "Exterior Quality", 
+        ylab = "Sale Price ($)")
+```
+## Observations:
+
+* Median sale price increases steadily as exterior quality rises from "Fa" to "Ex," and the spread of prices also widens 
+substantially at the top categories —a few "Ex" homes sell for far more than the typical "TA" home, 
+consistent with quality being a strong driver of price. Noticeable outliers exist for "GD" and "TA"
+, but many houses for both so average still low.
+
+# Problem 2
+
+## Part a: 
+
+```{r}
+#c is combine, rep is repeat, this is a 30 element vector
+set.seed(42)
+urn<-c(rep("red",10), rep("green",5), rep ("blue",15))
+
+n_sims<-1000000
+#sample function picks 30 times from urn without replacement
+# replicate and n run it 1 million times
+#outputs into vector automatically with 30 rows and 1 million columns
+# rows are draw position, columns are trial number
+simulation_matrix<-replicate(n_sims, sample(urn, size=30, replace=FALSE))
+#returns boolean matrix of if green or not
+green_check<-(simulation_matrix=="green")
+#computes row averages for each draw position, this is a matrix with 
+#30 rows and 1 column (the mean)
+p_hat<-rowMeans(green_check)
+
+#plot
+plot(
+  1:30, p_hat, type="b", pch = 19, col = "darkgreen",
+  xlab="Draw Position (i)", ylab= expression(hat(p)[i] ~"Estimated Probability of Green"), 
+  main="Estimated Probability of Green by Draw Position",
+  ylim = c(0.15, 0.18),
+  mgp = c(2.5, 1, 0),
+)
+#for comparison, line for 1/6
+abline(h = 5/30, col = "red", lty = 2, lwd = 2)
+legend("topright", legend = c(expression(hat(p)[i]), "Theoretical (1/6)"),
+       col = c("darkgreen", "red"), lty = c(1, 2), pch = c(19, NA), lwd = c(1, 2))
+
+```
+## Part b:
+```{r}
+set.seed(42)
+urn<-c(rep("red",10), rep("green",5), rep ("blue",15))
+n_sims<-1000000
+
+five_balls_alternating_simulation <-function(urn)
+{
+  draw<-sample(urn, size=5, replace=FALSE)
+  alternating_check<-all(draw[-1] != draw[-length(draw)])
+  return(alternating_check)
+}
+results<-replicate(n_sims, five_balls_alternating_simulation(urn)) 
+p_hat<-mean(results)
+
+#output without vector notation in front
+cat(sprintf("Estimated Probability of 5 Balls Alternating Colors: %.6f\n", p_hat))
+```
+
+## Part c:
+```{r}
+set.seed(42)
+urn<-c(rep("red",10), rep("green",5), rep ("blue",15))
+n_sims<-1000000
+
+three_balls_sim <-function(urn)
+{
+  draw<-sample(urn, size=15, replace=FALSE)
+  red_count<-sum(draw=="red")
+  green_count<-sum(draw=="green")
+  blue_count<-sum(draw=="blue")
+  return(red_count>=3 && green_count>=3 && blue_count>=3)
+}
+p_three_balls<-mean(replicate(n_sims, three_balls_sim(urn)))
+cat("MC Estimate for (c):", p_three_balls, "\n")
+```
+## Part d:
+```{r}
+set.seed(42)
+urn<-c(rep("red",10), rep("green",5), rep ("blue",15))
+n_sims<-1000000
+draws <- replicate(n_sims, sample(urn, size = 10, replace = FALSE))
+red_count<-colSums(draws=="red")
+green_count<-colSums(draws=="green")
+blue_count<-colSums(draws=="blue")
+probability_d <- mean(red_count > blue_count)
+cat("MC Estimate for (d):", probability_d, "\n")
+
+```
+## Part e:
+## Event I chose: The probability of finding at least 3 non-overlapping 3-ball groups of distinct colors, 
+## (R, G, B in any relative order) within 20 draws without replacement
+```{r}
+urn <- c(rep("red", 10), rep("green", 5), rep("blue", 15))
+n_sims <- 1000000
+
+count_non_overlapping_rgb <- function(urn) {
+  draws <- sample(urn, size = 20, replace = FALSE)
+  
+  rgb_count <- 0
+  i <- 1
+  while (i <= length(draws) - 2)
+  {
+    triplet <- draws[i:(i + 2)]
+    
+    if (length(unique(triplet)) == 3) 
+    {
+      rgb_count <- rgb_count + 1
+      i <- i + 3 
+    } 
+    else 
+    {
+      i <- i + 1  
+    }
+  }
+  return(rgb_count >= 3)
+}
+
+probability <- mean(replicate(n_sims, count_non_overlapping_rgb(urn)))
+cat("MC Estimate:", probability, "\n")
+```
+
+
+
+# Problem 3
+
+## Part a:
+### Setup
+
+With $y = \sqrt{x}$, so $x = y^2$ and $dx = 2y\,dy$, the limits transform as $x: 0 \to 5$ becomes $y: 0 \to \sqrt{5}$:
+
+$$
+\int_0^5 e^{\sqrt{x}}\,dx = \int_0^{\sqrt{5}} 2y\,e^y\,dy
+$$
+
+### Integration by Parts
+
+Let $u = 2y \implies du = 2\,dy$, and $dv = e^y\,dy \implies v = e^y$:
+
+$$
+\int 2y\,e^y\,dy = 2y\,e^y - \int 2e^y\,dy = 2e^y(y - 1)
+$$
+
+### Evaluating the Definite Integral
+
+$$
+\begin{aligned}
+\Big[2e^y(y-1)\Big]_0^{\sqrt{5}} &= 2e^{\sqrt{5}}(\sqrt{5} - 1) - 2e^0(0 - 1) \\
+&= 2e^{\sqrt{5}}(\sqrt{5} - 1) + 2 \\
+&\approx 25.130
+\end{aligned}
+$$
+## Part b:
+``` {r}
+f<- function(x)
+{
+    exp(sqrt(x))
+}
+
+output<- integrate(f, lower=0, upper=5)
+
+cat("Exact Integral:", output$value, "\n")
+```
+## Part c:
+``` {r}
+set.seed(42)
+n_sims <- 1000000
+#draws 1 million samples between 0 and 5 randomly
+samples<-runif(n_sims,min=0, max=5)
+# First integrates all samples
+# Second calculates average height above all sampled points
+# Multiplies by width of integration interval
+monte_carlo_output <- 5*mean(exp(sqrt(samples)))
+cat("MC Estimate:", monte_carlo_output, "\n")
+```
+
+
+
+## Problem 4 
+```{r setup, message=FALSE, warning=TRUE}
+set.seed(42)
+
+library(tidyverse)
+
+n_values=c(10,20,30,40,50,100)
+p_values=c(0.01, 0.02, 0.05, 0.10, 0.20, 0.50)
+
+dataframe_list<-list()
+for(n in n_values)
+{
+  for(p in p_values)
+  {
+    k<-0:n
+    binom_probabilities<-dbinom(k, size=n, prob=p)
+
+    lambda<-n*p
+    poisson_probabilities<-dpois(k, lambda=lambda)
+
+    mu<- n*p
+    sigma<-sqrt(n*p*(1-p))
+    normal_probabilities<-dnorm(k, mean=mu, sd=sigma)
+
+    temp_dataframe<-data.frame(
+      n = factor(paste0("n = ", n), levels = paste0("n = ", n_values)),
+      p = factor(paste0("p = ", p), levels = paste0("p = ", p_values)),
+      k=k,
+      Binomial=binom_probabilities,
+      Poisson=poisson_probabilities,
+      Normal=normal_probabilities
+    )
+    dataframe_list[[length(dataframe_list) + 1]] <- temp_dataframe
+    
+  }
+}
+#combine all dataframes into one
+combined_dataframe <- bind_rows(dataframe_list) %>%
+  pivot_longer(cols = c("Binomial", "Poisson", "Normal"), 
+               names_to = "Distribution", 
+               values_to = "Density")
+
+#plot1, small n values (n = 10, 20, 30)
+
+plot1 <- combined_dataframe %>% 
+  filter(n %in% c("n = 10", "n = 20", "n = 30")) %>% 
+  ggplot(aes(x = k, y = Density, color = Distribution)) +
+  geom_line(linewidth = 0.7) +
+  geom_point(data = . %>% filter(Distribution != "Normal"), size = 0.8, alpha = 0.7) +
+  facet_wrap(n ~ p, scales = "free", ncol = 6) +
+  scale_color_manual(values = c("Binomial" = "#1F77B4", 
+  "Poisson" = "#2CA02C", "Normal" = "#D62728")) +
+  labs(
+    title = "Comparison of Binomial Distribution vs. Approximations 
+    (n = 10, 20, 30)",
+    x = "k (Number of Successes)",
+    y = "Density / Probability",
+    color = "Distribution"
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    strip.text = element_text(face = "bold", size = 8.5),
+    axis.text.x = element_text(size = 7),
+    axis.text.y = element_text(size = 6),
+    legend.position = "bottom"
+  )
+
+# Plot 2: Large n values (n = 40, 50, 100)
+plot2 <- combined_dataframe %>% 
+  filter(n %in% c("n = 40", "n = 50", "n = 100")) %>% 
+  ggplot(aes(x = k, y = Density, color = Distribution)) +
+  geom_line(linewidth = 0.7) +
+  geom_point(data = . %>% filter(Distribution != "Normal"), size = 0.8, alpha = 0.7) +
+  facet_wrap(n ~ p, scales = "free", ncol = 6) +
+  scale_color_manual(values = c("Binomial" = "#1F77B4", 
+  "Poisson" = "#2CA02C", "Normal" = "#D62728")) +
+  labs(
+    title = "Comparison of Binomial Distribution vs. Approximations 
+    (n = 40, 50, 100)",
+    x = "k (Number of Successes)",
+    y = "Density / Probability",
+    color = "Distribution"
+  ) +
+  theme_minimal(base_size = 10) +
+  theme(
+    strip.text = element_text(face = "bold", size = 8.5),
+    axis.text.x = element_text(size = 7),
+    axis.text.y = element_text(size = 6),
+    legend.position = "bottom"
+  )
+```
+\newpage
+\newgeometry{margin=0.4in}
+\begin{landscape}
+```{r show-plot1, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12.5, fig.height=7.8, out.width="100%"}
+print(plot1)
+```
+\end{landscape}
+\restoregeometry
+
+\newpage
+\newgeometry{margin=0.4in}
+\begin{landscape}
+```{r show-plot2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12.5, fig.height=7.8, out.width="100%"}
+print(plot2)
+```
+\end{landscape}
+\restoregeometry
+
+## Observations
+
+### 1. Binomial Distribution
+* Represents the exact discrete probability mass function (PMF).
+* Highly skewed when $p$ is near $0$, but becomes symmetrical around $p = 0.50$.
+
+### 2. Poisson Approximation
+* Fits the Binomial PMF exceptionally well when $p$ is small ($p \le 0.05$), even for small $n$.
+* Rapidly diverges from the true Binomial distribution as $p$ increases.
+
+### 3. Normal Approximation
+* Approaches the Binomial distribution as $n$ increases ($n \ge 40$) and $p$ is moderate ($p \approx 0.50$), where $np \ge 5$ and $n(1-p) \ge 5$ hold true.
+* Fails for small $n$ or small $p$: as a continuous symmetric curve, it assigns density to negative values where the Binomial PMF has zero probability.
+
+### 4. Summary
+* Poisson approximates the Binomial distribution for rare events ($p \ll 1$).
+* Normal approximates the Binomial distribution for large, balanced samples.
