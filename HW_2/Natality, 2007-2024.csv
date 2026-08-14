@@ -1,0 +1,118 @@
+"Notes","Sex","Sex Code","County","County Code",Births
+,"Female","F","Alameda County, CA","06001",7812
+,"Female","F","Butte County, CA","06007",912
+,"Female","F","Contra Costa County, CA","06013",5277
+,"Female","F","El Dorado County, CA","06017",715
+,"Female","F","Fresno County, CA","06019",6410
+,"Female","F","Humboldt County, CA","06023",514
+,"Female","F","Imperial County, CA","06025",1061
+,"Female","F","Kern County, CA","06029",5831
+,"Female","F","Kings County, CA","06031",1047
+,"Female","F","Los Angeles County, CA","06037",44253
+,"Female","F","Madera County, CA","06039",1076
+,"Female","F","Marin County, CA","06041",985
+,"Female","F","Merced County, CA","06047",1853
+,"Female","F","Monterey County, CA","06053",2534
+,"Female","F","Napa County, CA","06055",519
+,"Female","F","Orange County, CA","06059",14936
+,"Female","F","Placer County, CA","06061",1945
+,"Female","F","Riverside County, CA","06065",13173
+,"Female","F","Sacramento County, CA","06067",8417
+,"Female","F","San Bernardino County, CA","06071",12410
+,"Female","F","San Diego County, CA","06073",17519
+,"Female","F","San Francisco County, CA","06075",3398
+,"Female","F","San Joaquin County, CA","06077",4726
+,"Female","F","San Luis Obispo County, CA","06079",1193
+,"Female","F","San Mateo County, CA","06081",3538
+,"Female","F","Santa Barbara County, CA","06083",2620
+,"Female","F","Santa Clara County, CA","06085",9190
+,"Female","F","Santa Cruz County, CA","06087",985
+,"Female","F","Shasta County, CA","06089",839
+,"Female","F","Solano County, CA","06095",2282
+,"Female","F","Sonoma County, CA","06097",2169
+,"Female","F","Stanislaus County, CA","06099",3248
+,"Female","F","Tulare County, CA","06107",3232
+,"Female","F","Ventura County, CA","06111",4147
+,"Female","F","Yolo County, CA","06113",907
+,"Female","F","Unidentified Counties, CA","06999",4672
+"Total","Female","F",,,196345
+,"Male","M","Alameda County, CA","06001",8211
+,"Male","M","Butte County, CA","06007",1074
+,"Male","M","Contra Costa County, CA","06013",5611
+,"Male","M","El Dorado County, CA","06017",809
+,"Male","M","Fresno County, CA","06019",6827
+,"Male","M","Humboldt County, CA","06023",548
+,"Male","M","Imperial County, CA","06025",1128
+,"Male","M","Kern County, CA","06029",5932
+,"Male","M","Kings County, CA","06031",1130
+,"Male","M","Los Angeles County, CA","06037",46254
+,"Male","M","Madera County, CA","06039",1059
+,"Male","M","Marin County, CA","06041",1056
+,"Male","M","Merced County, CA","06047",1903
+,"Male","M","Monterey County, CA","06053",2637
+,"Male","M","Napa County, CA","06055",585
+,"Male","M","Orange County, CA","06059",15990
+,"Male","M","Placer County, CA","06061",2007
+,"Male","M","Riverside County, CA","06065",13809
+,"Male","M","Sacramento County, CA","06067",9022
+,"Male","M","San Bernardino County, CA","06071",12874
+,"Male","M","San Diego County, CA","06073",18412
+,"Male","M","San Francisco County, CA","06075",3532
+,"Male","M","San Joaquin County, CA","06077",4949
+,"Male","M","San Luis Obispo County, CA","06079",1175
+,"Male","M","San Mateo County, CA","06081",3750
+,"Male","M","Santa Barbara County, CA","06083",2763
+,"Male","M","Santa Clara County, CA","06085",9539
+,"Male","M","Santa Cruz County, CA","06087",1089
+,"Male","M","Shasta County, CA","06089",886
+,"Male","M","Solano County, CA","06095",2330
+,"Male","M","Sonoma County, CA","06097",2195
+,"Male","M","Stanislaus County, CA","06099",3471
+,"Male","M","Tulare County, CA","06107",3330
+,"Male","M","Ventura County, CA","06111",4272
+,"Male","M","Yolo County, CA","06113",904
+,"Male","M","Unidentified Counties, CA","06999",4667
+"Total","Male","M",,,205730
+"Total",,,,,402075
+"---"
+"Dataset: Natality, 2007-2024"
+"Query Parameters:"
+"States: California (06)"
+"Year: 2024"
+"Group By: Sex; County"
+"Show Totals: True"
+"Show Zero Values: False"
+"Show Suppressed: False"
+"Calculate Rates Per: 1,000"
+"Population Option: No populations shown because rates were not selected."
+"---"
+"Help: See http://wonder.cdc.gov/wonder/help/natality.html for more information."
+"---"
+"Query Date: Aug 12, 2026 11:14:21 PM"
+"---"
+"Suggested Citation: Centers for Disease Control and Prevention, National Center for Health Statistics. National Vital Statistics"
+"System, Natality on CDC WONDER Online Database. Data are from the Natality Records 2007-2024, as compiled from data provided by"
+"the 57 vital statistics jurisdictions through the Vital Statistics Cooperative Program. Accessed at"
+"http://wonder.cdc.gov/natality-current.html on Aug 12, 2026 11:14:21 PM"
+"---"
+Caveats:
+"1. Each birth record represents one liveborn infant."
+"2. County-level data are shown only for counties with populations of 100,000 persons or more. Within each state, data for all"
+"counties with fewer than 100,000 persons are combined together under the label ""Unidentified Counties""."
+"3. <p> As a result of population changes the following counties do not have data available for all years.<br/> Before 2014 the"
+"data for the following counties was recoded to the ""Unidentified Counties"" category within the state of the county because"
+"they did not meet minimum population standards. Houston County, AL (01069); Navajo County, AZ (04017); Faulkner County, AR"
+"(05045); Saline County, AR (05125); Bartow County, GA (13015); Carroll County, GA (13045); Columbia County, GA (13073); Coweta"
+"County, GA (13077); Douglas County, GA (13097); Fayette County, GA (13113); Forsyth County, GA (13117); Lowndes County, GA"
+"(13185); Paulding County, GA (13223); Whitfield County, GA (13313); Bonneville County, ID (16019); DeKalb County, IL (17037);"
+"Kendall County, IL (17093); Clark County, IN (18019); Douglas County, KS (20045); Boone County, KY (21015); Hardin County, KY"
+"(21093); Warren County, KY (21227); Ascension Parish, LA (22005); Bossier Parish, LA (22015); Livingston Parish, LA (22063);"
+"Cecil County, MD (24015); St. Mary's County, MD (24037); Scott County, MN (27139); Wright County, MN (27171); Franklin County,"
+"MO (29071); Missoula County, MT (30063); Sandoval County, NM (35043); Tompkins County, NY (36109); Brunswick County, NC (37019);"
+"Craven County, NC (37049); Harnett County, NC (37085); Henderson County, NC (37089); Miami County, OH (39109); Canadian County,"
+"OK (40017); Adams County, PA (42001); Dorchester County, SC (45035); Pennington County, SD (46103); Wilson County, TN (47189);"
+"Comal County, TX (48091); Guadalupe County, TX (48187); Hays County, TX (48209); Kaufman County, TX (48257); Parker County, TX"
+"(48367); Cache County, UT (49005); Washington County, UT (49053); Spotsylvania County, VA (51177); Stafford County, VA (51179);"
+"Cowlitz County, WA (53015); Berkeley County, WV (54003); Fond du Lac County, WI (55039); Walworth County, WI (55127). </p> <p>"
+"After 2013 the data for the following counties was recoded to the ""Unidentified Counties"" category within the state of the"
+"county because they did not meet minimum population standards. Cape May County, NJ (34009); Portsmouth city, VA (51740). </p>"

@@ -1,0 +1,83 @@
+---
+title: "Math 189 Homework 2"
+author: "Daniel Kurland"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document:
+    toc: false
+  github_document: default
+---
+## Problem 1
+```{r}
+    df<-read.csv("Natality, 2007-2024.csv")
+    ## chi squared test for homogenity
+    ## H0: prob of being a girl same in all counties
+    ## H1: prob of being a girl differs in at least one county
+
+    contingency_table<-table(df$County,df$Sex) #check actually labels
+```
+## Problem 2
+
+## Part a:
+
+```{r}
+chisq.power<-function(k,t,n,B=2000, alpha=0.05)
+{
+    reject_vector<-logical(B)
+    prob_vector<-c(rep(1/(2*k)+t,k),rep(1/(2*k)-t,k))
+    for (i in 1:B)
+    {
+        x<-sample(1:(2*k),size=n, replace=TRUE, prob=prob_vector)
+        counts <- table(factor(x, levels = 1:(2*k)))
+        reject_vector[i]<-chisq.test(counts)$p.value<alpha
+    }
+return(mean(reject_vector))
+}
+```
+### Part b:
+```{r}
+
+```
+## Problem 3
+```{r}
+set.seed(42)
+n_sims <- 10000
+k_vector<-c(5,10,20,50,100)
+n_vector<-c(2,4,5,6,8,10)
+
+results_matrix <- matrix(NA, nrow = length(k_vector), ncol = length(n_vector))
+rownames(results_matrix) <- paste0("k=", k_vector)
+colnames(results_matrix) <- paste0("n=", n_vector, "k")
+
+expected_count_matrix <- results_matrix
+
+for (i in seq_along(k_vector))
+{
+    k <- k_vector[i]
+    for (j in seq_along(n_vector))
+    {
+        n<-n_vector[j]*k
+        for (s in 1:n_sims)
+        {
+            x <- sample(1:k, size = n, replace = TRUE)    
+            tab<-table(factor(x, levels = 1:k))
+            gof_results<-suppressWarnings(chisq.test(tab))
+            p_values[s] <- gof_results$p.value
+        }
+    results_matrix[i,j] <- mean(p_values < 0.05)
+    expected_count_matrix[i,j] <- n/k
+    }
+}
+results_matrix
+expected_count_matrix
+```
+
+##Explain how doing
+
+## Summarise findings (table or figures welcome)
+
+## Problem 4
+```{r}
+library(parallel)
+
+```
