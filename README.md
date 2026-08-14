@@ -1,2 +1,5 @@
 # Math-189-Labs
-exploratory data analysis from math 189
+Exploratory data analysis from UCSD Math 189
+
+Lab 0: Histogram and horizontal box plot from cross sectional survey guessing cow size
+Lab 1: 
