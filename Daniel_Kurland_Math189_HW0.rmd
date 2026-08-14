@@ -1,0 +1,36 @@
+---
+title: "Math 189 Homework 2"
+author: "Daniel Kurland"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  pdf_document:
+    toc: false
+  github_document: default
+---
+
+## Problem 1
+
+# Part a:
+```{r}
+data<-read.csv("Planet Money Cow Data - Sheet1.csv")
+data = data[, 1]
+```
+This study is an observational study, or cross sectional survey more specifically.
+
+# Part b:
+```{r}
+par(mai = c(1, 1, 0.2, 0.2))
+hist(data, 500, main="Histogram of Cow Prices", xlab="Weight guesses (in lbs)", ylab="Frequency")
+#true weight
+abline(v = 1355, col = 2, lwd = 2)
+
+```
+
+# Part c:
+```{r}
+par(mai = c(1,0.2,0.2,0.2))
+boxplot(data, horizontal = TRUE, main = "Horizontal Boxplot of Cow Prices", 
+xlab = "weight guesses (in lbs)", frame.plot =FALSE)
+#true weight
+abline(v = 1355, col = 2, lwd = 2)
+```
