@@ -42,6 +42,20 @@ counts_table <- xtabs(Births ~ County + Sex, data = clean_df)
 ## H0: Probability of being a girl is the same in all counties
 ## H1: Probability of being a girl differs in at least one county
 chi2_result <- chisq.test(counts_table)
+
+# Boxplot overlaid with individual county data points
+ggplot(county_summary, aes(x = "", y = Prop_Female)) +
+  geom_boxplot(fill = "lightblue", outlier.shape = NA, alpha = 0.6) +
+  geom_jitter(width = 0.15, color = "darkblue", size = 2, alpha = 0.7) +
+  geom_hline(yintercept = 0.487, linetype = "dashed", color = "red", linewidth = 0.8) +
+  labs(
+    title = "Distribution of Female Birth Proportions Across CA Counties",
+    subtitle = "Dashed red line indicates state median (~0.4876)",
+    x = NULL,
+    y = "Proportion of Female Births"
+  ) +
+  theme_minimal() +
+  theme(axis.ticks.x = element_blank())
 print(chi2_result)
 print(chi2_result$p.value<alpha)
 ```
@@ -125,7 +139,9 @@ for (i in seq_along(k_vector)) {
 results_matrix
 expected_count_matrix
 ```
-
+Validity is checked by verifying if rejection rates under H0 less than
+or greater than alpha=0.05. when expected counts drop to 2, k=5 is higher than others
+but perormance robust in general, always close to 0.05 even with low expected counts.
 
 # Problem 4
 
